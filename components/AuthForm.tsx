@@ -22,7 +22,7 @@ const formSchema = z.object({
   username: z.string().min(2).max(50),
 })
 
-const AuthForm = () => {
+const AuthForm = ({ type }: { type: FormType }) => {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,24 +38,32 @@ const AuthForm = () => {
     console.log(values)
   }
 
+  const isSignIn = type === 'sign-in';
+
   return ( 
     <div className="card-border lg:min-w-[566px]">
       <div className="flex flex-col gap-6 card py-14 px-10"> 
-        <div className="flex flex-col gap-2 justify-center">
+        <div className="flex flex-col gap-6 items-center justify-center">
             <Image 
               src="/client-prep-pal-logo-light.svg"
               alt="logo"
               height={64}
               width={140}
             />
-          <h3>Practice. Progress. Clients.</h3>
+          <h4>Practice. Progress. Clients.</h4>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full mt-4 form">
-            <p>Name</p>
-            <Button type="submit">Submit</Button>
+            {!isSignIn && <p>Full Name</p>}
+            <p>Email</p>
+            <p>Password</p>
+            <Button className="btn" type="submit">{isSignIn ? 'Sign In' : 'Create a New Account'}</Button>
           </form>
         </Form>
+
+        <p className="text-left">
+            {isSignIn ? 'Already have an account?' : ''}
+        </p>
       </div>
     </div>
   )
